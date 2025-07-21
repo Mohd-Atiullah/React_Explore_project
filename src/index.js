@@ -13,6 +13,7 @@ import Homepage from './apps/appmodules/dashboard/Homepage';
 import Dashboardpage from './apps/appmodules/dashboard/Dashboardpage';
 import Employeepage from './apps/appmodules/dashboard/Employeepage';
 import UserDetailspage from './apps/appmodules/dashboard/UserDetailspage';
+import { app, analytics } from './firebase.js';
 
 
 
@@ -34,6 +35,8 @@ root.render(
 
 
             <Route path='*' element={<Apperror/>}></Route>
+            <Route path='fire' element={<firebase/>}></Route>
+
         </Routes>
     
     

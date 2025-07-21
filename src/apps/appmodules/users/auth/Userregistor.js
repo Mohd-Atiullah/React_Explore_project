@@ -1,96 +1,68 @@
-import React from 'react'
-import { FaUserTie } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-import { useForm } from "react-hook-form"
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../../../firebase';
+import { useNavigate } from 'react-router-dom'; // ✅ Navigation import
 
-function Userregistor() {
-     const {register,handleSubmit,formState: { errors }} = useForm();
+function UserRegister() {
+  const { register, handleSubmit, reset } = useForm();
+  const navigate = useNavigate(); // ✅ Hook initialization
 
+  const myformsubmit = async (f) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, f.email, f.pass);
+      console.log("User registered:", userCredential.user);
+      alert("Registration successful!");
+      reset();
 
-const myformsubmit = (f)=>{
-    console.log(f);
-}
-
+    
+      navigate("/userportal"); 
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Registration failed: " + error.message);
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit(myformsubmit)}>
-    <div className='container'>
-            <div className='row justify-content-center'>
-                <div className='col-md-8 p-3 bg-light shadow'>
-                    <div className='container-fluid'>
-                        <div className='row'>
-                            <div className='col-12 text-center'>
-                                <h1> <FaUserTie/></h1>
-                                <p className='h5'>New User Registor Page</p>
-                            </div>
-                            <div className='col-md-6 mt-2'>
-                                <div class="mb-3">
-                                    <label class="form-label">  Email address</label>
-                                    <input type="email" class="form-control" {...register("email",{required:true})} />
-                                    {errors.email && <p className='text-danger'>email is required</p>}
-                                </div>
-                            </div>
-                            <div className='col-md-6 mt-2'>
-                                <div class="mb-3">
-                                    <label class="form-label">FullName</label>
-                                    <input type="text" class="form-control" {...register("fullname",{required:true})}/>
-                                    {errors.fullname && <p className='text-danger'>fullname is required</p>}
-                                </div>
-                            </div>
-
-
-                            <div className='col-md-6 mt-2'>
-                                <div class="mb-3">
-                                    <label class="form-label">DOB</label>
-                                    <input type="date" class="form-control" {...register("dob")}/>
-                                </div>
-                            </div>
-                            <div className='col-md-6 mt-2'>
-                                <div class="mb-3">
-                                    <label class="form-label">Gender</label>
-                                    <select className='form-select' {...register("gender")}>
-                                        <option>Male</option>
-                                        <option>Female</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div className='col-md-6 mt-2'>
-                                <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" class="form-control" {...register("pass",{required:true,minLength:5,maxLength:10})}/>
-                                    {errors.pass?.type==="required" && <p className='text-danger'>password is required</p>}
-                                    {errors.pass?.type==="minLength" && <p className='text-warning'>password must minimub 5 charector</p>}
-                                    {errors.pass?.type==="maxLength" && <p className='text-info'>password too much above 10 charectors </p>}
-                                </div>
-                            </div>
-                            <div className='col-md-6 mt-2'>
-                                <div class="mb-3">
-                                    <label class="form-label">Role</label>
-                                    <select className='form-select' {...register("role")}>
-                                        <option>User</option>
-                                        <option>Admin</option>
-                                        <option>Teacher</option>
-                                        <option>UpperAdmin</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className='col-md-12 text-center'>
-                                <div class="mb-3">
-                                    <button type='submit' className='btn btn-success'> <FaCheck/> Registor Now </button>
-                                    <Link to="/userportal" className='ms-3'>Login</Link>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div className="container mt-4" style={{ maxWidth: '500px' }}>
+      <h2 className="text-center mb-4">User Registration</h2>
+      <form onSubmit={handleSubmit(myformsubmit)}>
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">Name</label>
+          <input
+            {...register('name', { required: true })}
+            type="text"
+            className="form-control"
+            id="name"
+            placeholder="Enter your name"
+          />
         </div>
-        </form>
-  )
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">Email</label>
+          <input
+            {...register('email', { required: true })}
+            type="email"
+            className="form-control"
+            id="email"
+            placeholder="Enter your email"
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="pass" className="form-label">Password</label>
+          <input
+            {...register('pass', { required: true })}
+            type="password"
+            className="form-control"
+            id="pass"
+            placeholder="Enter your password"
+          />
+        </div>
+        <div className="d-grid">
+          <button type="submit" className="btn btn-primary">Register</button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
-export default Userregistor
+export default UserRegister;
