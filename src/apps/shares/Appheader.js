@@ -1,7 +1,19 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
+
+
 
 function Appheader() {
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    navigate('/');
+  }; 
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary shadow fixed-top">
   <div className="container-fluid">
@@ -17,6 +29,7 @@ function Appheader() {
         <li className="nav-item">
           <Link to="" className="nav-link" >Link</Link>
         </li>
+          <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
         <li className="nav-item dropdown">
           <Link to="" className="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Dropdown
